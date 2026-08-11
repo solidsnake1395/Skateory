@@ -1,19 +1,23 @@
 import { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  useColorScheme,
+  View,
 } from "react-native";
 import { supabase } from "../../lib/supabase";
+import { getTheme } from "../../theme";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const colorScheme = useColorScheme();
+  const theme = getTheme(colorScheme === "dark" ? "dark" : "light");
 
   async function handleSignIn() {
     if (!email || !password)
@@ -44,12 +48,20 @@ export default function LoginScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Skateory</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.title, { color: theme.text }]}>Skateory</Text>
 
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          {
+            backgroundColor: theme.surface,
+            borderColor: theme.border,
+            color: theme.text,
+          },
+        ]}
         placeholder="Correo electrónico"
+        placeholderTextColor={theme.muted}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -57,8 +69,16 @@ export default function LoginScreen() {
       />
 
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          {
+            backgroundColor: theme.surface,
+            borderColor: theme.border,
+            color: theme.text,
+          },
+        ]}
         placeholder="Contraseña"
+        placeholderTextColor={theme.muted}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -67,20 +87,35 @@ export default function LoginScreen() {
       {loading ? (
         <ActivityIndicator
           size="large"
-          color="#000000"
-          style={{ marginTop: 20 }}
+          color={theme.text}
+          style={styles.loader}
         />
       ) : (
         <>
-          <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-            <Text style={styles.buttonText}>Iniciar Sesión</Text>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { backgroundColor: theme.primary, borderColor: theme.border },
+            ]}
+            onPress={handleSignIn}
+          >
+            <Text style={[styles.buttonText, { color: theme.secondary }]}>
+              Iniciar Sesión
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.buttonSecondary]}
+            style={[
+              styles.button,
+              styles.buttonSecondary,
+              {
+                backgroundColor: theme.surface,
+                borderColor: theme.border,
+              },
+            ]}
             onPress={handleSignUp}
           >
-            <Text style={[styles.buttonText, styles.buttonTextSecondary]}>
+            <Text style={[styles.buttonText, { color: theme.text }]}>
               Registrarse
             </Text>
           </TouchableOpacity>
@@ -95,38 +130,38 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#fff",
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: "900",
     textAlign: "center",
     marginBottom: 40,
+    letterSpacing: 1,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 12,
     marginBottom: 16,
+    fontSize: 16,
+  },
+  loader: {
+    marginTop: 20,
   },
   button: {
-    backgroundColor: "#000",
-    padding: 15,
-    borderRadius: 8,
+    paddingVertical: 15,
+    borderRadius: 10,
+    borderWidth: 1,
     alignItems: "center",
     marginBottom: 12,
   },
   buttonSecondary: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#000",
+    backgroundColor: "transparent",
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  buttonTextSecondary: {
-    color: "#000",
+    fontWeight: "800",
+    fontSize: 15,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
   },
 });

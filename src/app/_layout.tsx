@@ -1,14 +1,17 @@
 import { Session } from "@supabase/supabase-js";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { supabase } from "../lib/supabase";
+import { getTheme } from "../theme";
 
 export default function RootLayout() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const segments = useSegments();
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const theme = getTheme(colorScheme === "dark" ? "dark" : "light");
 
   useEffect(() => {
     // 1. Obtener la sesión real actual
@@ -49,16 +52,23 @@ export default function RootLayout() {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#fff",
+          backgroundColor: theme.background,
         }}
       >
-        <ActivityIndicator size="large" color="#000000" />
+        <ActivityIndicator size="large" color={theme.text} />
       </View>
     );
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {
+          backgroundColor: theme.background,
+        },
+      }}
+    >
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(tabs)" />
     </Stack>
