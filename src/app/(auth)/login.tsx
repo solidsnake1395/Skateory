@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -104,21 +105,24 @@ export default function LoginScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
+          <Link
+            href="/(auth)/register"
+            asChild
+            style={StyleSheet.flatten([
               styles.button,
               styles.buttonSecondary,
               {
                 backgroundColor: theme.surface,
                 borderColor: theme.border,
               },
-            ]}
-            onPress={handleSignUp}
+            ])}
           >
-            <Text style={[styles.buttonText, { color: theme.text }]}>
-              Registrarse
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={[styles.buttonText, { color: theme.text }]}>
+                Registrarse
+              </Text>
+            </TouchableOpacity>
+          </Link>
         </>
       )}
     </View>
